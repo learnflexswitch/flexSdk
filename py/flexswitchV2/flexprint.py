@@ -1220,7 +1220,23 @@ class FlexPrint( FlexSwitchShow):
         values.append('%s' % o['NumGetCalls'])
         values.append('%s' % o['NumActionCalls'])
         rows.append(values)
-        self.tblPrintObject('SystemStatusState', header, rows)
+        self.tblPrintObject('SystemStatusState', header, rows)   
+	
+	
+	"""
+	Added for DPI
+	"""
+	def getDpiRulesById(self, objectId ):
+		reqUrl =  self.stateUrlBase + 'DpiRules'+"/%s"%(objectId)
+		if self.authenticate == True:
+			r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False)
+		else:
+			r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout)
+		return r
 
+	def getAllDpiRulesStates(self):
+		return self.getObjects('DpiRules', self.stateUrlBase)
+
+	
 if __name__=='__main__':
     pass
