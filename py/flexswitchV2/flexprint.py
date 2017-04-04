@@ -1221,21 +1221,45 @@ class FlexPrint( FlexSwitchShow):
         values.append('%s' % o['NumActionCalls'])
         rows.append(values)
         self.tblPrintObject('SystemStatusState', header, rows)   
-	
-	
-	"""
-	Added for DPI
-	"""
-	def getDpiRulesById(self, objectId ):
-		reqUrl =  self.stateUrlBase + 'DpiRules'+"/%s"%(objectId)
-		if self.authenticate == True:
-			r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False)
-		else:
-			r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout)
-		return r
+		
 
-	def getAllDpiRulesStates(self):
-		return self.getObjects('DpiRules', self.stateUrlBase)
+    def printDpiState(self,file):
+
+        self.printDpiStatesInfo(file)
+
+    def printDpiStates(self):
+
+        self.printDpiStatesInfo()
+
+    def printDpiStatesInfo(self, File=None):
+        if File is not None:
+            rules = self.swtch.getDpiRulesById(File).json()
+        else:
+            rules = self.swtch.getAllDpiRulesStates().json()
+
+        if len(rules)>=0:
+            print '\n'
+            labels = ('Name','Status','Rules')
+            rows=[]
+            files = rules['Objects']
+
+            for file in files:
+                rule = file['Object']
+                name = rule['name']
+                status = "enabled"
+
+                if File is not None:
+                    rules=str(len(rule['Rules']))
+                    rows.append("%s" %(name), "%s" %(status), "%s" %(rules))
+                else:
+                    for rule in  rule['Rules']:
+                        rows.append("%s" %(name), "%s" %(status), "%s" %(rule))
+
+            width = 20
+            print indent([labels]+rows, hasHeader=True, separateRows=False,
+                        prefix=' ', postfix=' ', headerChar= '-', delim='    ',
+                        wrapfunc=lambda x: wrap_onspace_strict(x,width))
+
 
 	
 if __name__=='__main__':
