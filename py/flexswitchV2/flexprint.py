@@ -229,6 +229,44 @@ class FlexPrint( FlexSwitchShow):
                     print "   via", rt_next['NextHopList'][rt_count-1]['NextHopIp']+", "+rt_next['NextHopList'][rt_count-1]['NextHopIntRef']+", "+"["+str(rd['Distance'])+"/"+str(rt_next['NextHopList'][rt_count-1]['Weight'])+"]"+",",rt['RouteCreatedTime']+",",rt['Protocol']
                 rt_count-=1
 
+    def printDpiState(self,file):
+
+        self.printDpiStatesInfo(file)
+        
+    def printDpiStates(self):
+
+        self.printDpiStatesInfo()
+
+    def printDpiStatesInfo(self, Name=None):
+        if Name is not None:
+            rules = self.swtch.getDpiRulesById(Name).json()
+        else:
+            rules = self.swtch.getAllDpiRulesStates().json()
+            
+        if len(rules)>=0:
+            print '\n'
+            labels = ('Name','Status','Rules')
+            rows=[]
+            files = rules['Objects']
+            
+            for file in files:
+                rule = file['Object']
+                name = rule['name']
+                status = "enabled"
+                rulelist = rule['Rules']
+                ruleslen=str(len(rulelist))
+                if Name is None:
+                    rows.append(("%s" %(name), "%s" %(status), "%s" %(ruleslen)))
+                    #print name
+                else:
+                    for rule in  rulelist:
+                        rows.append(("%s" %(name), "%s" %(status), "%s" %(rule)))
+
+            width = 20
+            print indent([labels]+rows, hasHeader=True, separateRows=False,
+                        prefix=' ', postfix=' ', headerChar= '-', delim='    ',
+                        wrapfunc=lambda x: wrap_onspace_strict(x,width))
+
     def printVlanState(self, VlanId):
 
         self.printVlanStates(int(VlanId))
@@ -1220,47 +1258,7 @@ class FlexPrint( FlexSwitchShow):
         values.append('%s' % o['NumGetCalls'])
         values.append('%s' % o['NumActionCalls'])
         rows.append(values)
-        self.tblPrintObject('SystemStatusState', header, rows)   
-		
+        self.tblPrintObject('SystemStatusState', header, rows)
 
-    def printDpiState(self,file):
-
-        self.printDpiStatesInfo(file)
-
-    def printDpiStates(self):
-
-        self.printDpiStatesInfo()
-
-    def printDpiStatesInfo(self, File=None):
-        if File is not None:
-            rules = self.swtch.getDpiRulesById(File).json()
-        else:
-            rules = self.swtch.getAllDpiRulesStates().json()
-
-        if len(rules)>=0:
-            print '\n'
-            labels = ('Name','Status','Rules')
-            rows=[]
-            files = rules['Objects']
-
-            for file in files:
-                rule = file['Object']
-                name = rule['name']
-                status = "enabled"
-
-                if File is not None:
-                    rules=str(len(rule['Rules']))
-                    rows.append("%s" %(name), "%s" %(status), "%s" %(rules))
-                else:
-                    for rule in  rule['Rules']:
-                        rows.append("%s" %(name), "%s" %(status), "%s" %(rule))
-
-            width = 20
-            print indent([labels]+rows, hasHeader=True, separateRows=False,
-                        prefix=' ', postfix=' ', headerChar= '-', delim='    ',
-                        wrapfunc=lambda x: wrap_onspace_strict(x,width))
-
-
-	
 if __name__=='__main__':
     pass

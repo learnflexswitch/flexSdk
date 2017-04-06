@@ -23,13 +23,14 @@ patchheaders = {'Conent-Type':'application/json-patch+json'}
 #    return returnDetails
 class FlexSwitch( object):
     httpSuccessCodes = [200, 201, 202, 204]
-    def  __init__ (self, ip, port, user=None, passwd=None, timeout=15):
+    def  __init__ (self, ip, port, user=None, passwd=None, timeout=1500):
         self.ip    = ip
         self.port  = port
         self.timeout = timeout
         self.authenticate = False
         if user is not None:
-            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+            #requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+            #requests.p
             self.authenticate = True
             self.user = user
             self.passwd = passwd
@@ -168,6 +169,26 @@ class FlexSwitch( object):
     def getAllOspfIPv4RouteStates(self):
         return self.getObjects('OspfIPv4Route', self.stateUrlBase)
 
+    """
+        Added for DPI 
+    """
+    def getDpiRulesById(self, objectId ):
+        reqUrl =  self.stateUrlBase + 'DpiRules'+"/%s"%(objectId)
+        if self.authenticate == True:
+                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
+        else:
+                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
+        return r
+
+    def getAllDpiRulesStates(self):
+        reqUrl =  self.stateUrlBase + 'DpiRules'
+        if self.authenticate == True:
+                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
+        else:
+                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
+        return r
+                
+            
 
     """
     .. automethod :: createTemperatureSensor(self,
@@ -1140,305 +1161,6 @@ class FlexSwitch( object):
 
     def getAllVlans(self):
         return self.getObjects('Vlan', self.cfgUrlBase)
-
-
-    """
-    .. automethod :: createDWDMModuleNwIntf(self,
-        :param uint8 NwIntfId : DWDM Module network interface identifier DWDM Module network interface identifier
-        :param uint8 ModuleId : DWDM Module identifier DWDM Module identifier
-        :param uint8 ClntIntfIdToTributary0Map : Client interface ID to map to network interface tributary 0 Client interface ID to map to network interface tributary 0
-        :param uint8 ClntIntfIdToTributary1Map : Client interface ID to map to network interface tributary 1 Client interface ID to map to network interface tributary 1
-        :param bool EnableRxPRBSChecker : Enable RX PRBS checker Enable RX PRBS checker
-        :param float64 TxPulseShapeFltrRollOff : TX pulse shape filter roll off factor TX pulse shape filter roll off factor
-        :param float64 TxPower : Transmit output power for this network interface in dBm Transmit output power for this network interface in dBm
-        :param bool RxPRBSInvertPattern : Check against inverted PRBS polynomial pattern Check against inverted PRBS polynomial pattern
-        :param float64 TxPowerRampdBmPerSec : Rate of change of tx power on this network interface Rate of change of tx power on this network interface
-        :param bool EnableTxPRBS : Enable TX PRBS generation on this network interface Enable TX PRBS generation on this network interface
-        :param bool TxPRBSInvertPattern : Generate inverted PRBS polynomial pattern Generate inverted PRBS polynomial pattern
-        :param string AdminState : Administrative state of this network interface Administrative state of this network interface
-        :param uint8 ChannelNumber : TX Channel number to use for this network interface TX Channel number to use for this network interface
-        :param string FECMode : DWDM Module network interface FEC mode DWDM Module network interface FEC mode
-        :param string ModulationFmt : Modulation format to use for this network interface Modulation format to use for this network interface
-        :param string TxPulseShapeFltrType : TX pulse shaping filter type TX pulse shaping filter type
-        :param string RxPRBSPattern : PRBS pattern to use for checker PRBS pattern to use for checker
-        :param string TxPRBSPattern : Pattern to use for TX PRBS generation Pattern to use for TX PRBS generation
-        :param bool DiffEncoding : Control to enable/disable DWDM Module network interface encoding type Control to enable/disable DWDM Module network interface encoding type
-
-	"""
-    def createDWDMModuleNwIntf(self,
-                               NwIntfId,
-                               ModuleId,
-                               ClntIntfIdToTributary0Map,
-                               ClntIntfIdToTributary1Map,
-                               EnableRxPRBSChecker=False,
-                               TxPulseShapeFltrRollOff='0.301',
-                               TxPower='0',
-                               RxPRBSInvertPattern=True,
-                               TxPowerRampdBmPerSec='1',
-                               EnableTxPRBS=False,
-                               TxPRBSInvertPattern=True,
-                               AdminState='UP',
-                               ChannelNumber=48,
-                               FECMode='15%SDFEC',
-                               ModulationFmt='16QAM',
-                               TxPulseShapeFltrType='RootRaisedCos',
-                               RxPRBSPattern='2^31',
-                               TxPRBSPattern='2^31',
-                               DiffEncoding=True):
-        obj =  { 
-                'NwIntfId' : int(NwIntfId),
-                'ModuleId' : int(ModuleId),
-                'ClntIntfIdToTributary0Map' : int(ClntIntfIdToTributary0Map),
-                'ClntIntfIdToTributary1Map' : int(ClntIntfIdToTributary1Map),
-                'EnableRxPRBSChecker' : True if EnableRxPRBSChecker else False,
-                'TxPulseShapeFltrRollOff' : TxPulseShapeFltrRollOff,
-                'TxPower' : TxPower,
-                'RxPRBSInvertPattern' : True if RxPRBSInvertPattern else False,
-                'TxPowerRampdBmPerSec' : TxPowerRampdBmPerSec,
-                'EnableTxPRBS' : True if EnableTxPRBS else False,
-                'TxPRBSInvertPattern' : True if TxPRBSInvertPattern else False,
-                'AdminState' : AdminState,
-                'ChannelNumber' : int(ChannelNumber),
-                'FECMode' : FECMode,
-                'ModulationFmt' : ModulationFmt,
-                'TxPulseShapeFltrType' : TxPulseShapeFltrType,
-                'RxPRBSPattern' : RxPRBSPattern,
-                'TxPRBSPattern' : TxPRBSPattern,
-                'DiffEncoding' : True if DiffEncoding else False,
-                }
-        reqUrl =  self.cfgUrlBase+'DWDMModuleNwIntf'
-        if self.authenticate == True:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def deleteDWDMModuleNwIntf(self,
-                               NwIntfId,
-                               ModuleId):
-        obj =  { 
-                'NwIntfId' : NwIntfId,
-                'ModuleId' : ModuleId,
-                }
-        reqUrl =  self.cfgUrlBase+'DWDMModuleNwIntf'
-        if self.authenticate == True:
-                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def deleteDWDMModuleNwIntfById(self, objectId ):
-        reqUrl =  self.cfgUrlBase+'DWDMModuleNwIntf'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
-        else:
-                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
-        return r
-
-    def updateDWDMModuleNwIntf(self,
-                               NwIntfId,
-                               ModuleId,
-                               ClntIntfIdToTributary0Map = None,
-                               ClntIntfIdToTributary1Map = None,
-                               EnableRxPRBSChecker = None,
-                               TxPulseShapeFltrRollOff = None,
-                               TxPower = None,
-                               RxPRBSInvertPattern = None,
-                               TxPowerRampdBmPerSec = None,
-                               EnableTxPRBS = None,
-                               TxPRBSInvertPattern = None,
-                               AdminState = None,
-                               ChannelNumber = None,
-                               FECMode = None,
-                               ModulationFmt = None,
-                               TxPulseShapeFltrType = None,
-                               RxPRBSPattern = None,
-                               TxPRBSPattern = None,
-                               DiffEncoding = None):
-        obj =  {}
-        if NwIntfId != None :
-            obj['NwIntfId'] = int(NwIntfId)
-
-        if ModuleId != None :
-            obj['ModuleId'] = int(ModuleId)
-
-        if ClntIntfIdToTributary0Map != None :
-            obj['ClntIntfIdToTributary0Map'] = int(ClntIntfIdToTributary0Map)
-
-        if ClntIntfIdToTributary1Map != None :
-            obj['ClntIntfIdToTributary1Map'] = int(ClntIntfIdToTributary1Map)
-
-        if EnableRxPRBSChecker != None :
-            obj['EnableRxPRBSChecker'] = True if EnableRxPRBSChecker else False
-
-        if TxPulseShapeFltrRollOff != None :
-            obj['TxPulseShapeFltrRollOff'] = TxPulseShapeFltrRollOff
-
-        if TxPower != None :
-            obj['TxPower'] = TxPower
-
-        if RxPRBSInvertPattern != None :
-            obj['RxPRBSInvertPattern'] = True if RxPRBSInvertPattern else False
-
-        if TxPowerRampdBmPerSec != None :
-            obj['TxPowerRampdBmPerSec'] = TxPowerRampdBmPerSec
-
-        if EnableTxPRBS != None :
-            obj['EnableTxPRBS'] = True if EnableTxPRBS else False
-
-        if TxPRBSInvertPattern != None :
-            obj['TxPRBSInvertPattern'] = True if TxPRBSInvertPattern else False
-
-        if AdminState != None :
-            obj['AdminState'] = AdminState
-
-        if ChannelNumber != None :
-            obj['ChannelNumber'] = int(ChannelNumber)
-
-        if FECMode != None :
-            obj['FECMode'] = FECMode
-
-        if ModulationFmt != None :
-            obj['ModulationFmt'] = ModulationFmt
-
-        if TxPulseShapeFltrType != None :
-            obj['TxPulseShapeFltrType'] = TxPulseShapeFltrType
-
-        if RxPRBSPattern != None :
-            obj['RxPRBSPattern'] = RxPRBSPattern
-
-        if TxPRBSPattern != None :
-            obj['TxPRBSPattern'] = TxPRBSPattern
-
-        if DiffEncoding != None :
-            obj['DiffEncoding'] = True if DiffEncoding else False
-
-        reqUrl =  self.cfgUrlBase+'DWDMModuleNwIntf'
-        if self.authenticate == True:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def updateDWDMModuleNwIntfById(self,
-                                    objectId,
-                                    ClntIntfIdToTributary0Map = None,
-                                    ClntIntfIdToTributary1Map = None,
-                                    EnableRxPRBSChecker = None,
-                                    TxPulseShapeFltrRollOff = None,
-                                    TxPower = None,
-                                    RxPRBSInvertPattern = None,
-                                    TxPowerRampdBmPerSec = None,
-                                    EnableTxPRBS = None,
-                                    TxPRBSInvertPattern = None,
-                                    AdminState = None,
-                                    ChannelNumber = None,
-                                    FECMode = None,
-                                    ModulationFmt = None,
-                                    TxPulseShapeFltrType = None,
-                                    RxPRBSPattern = None,
-                                    TxPRBSPattern = None,
-                                    DiffEncoding = None):
-        obj =  {}
-        if ClntIntfIdToTributary0Map !=  None:
-            obj['ClntIntfIdToTributary0Map'] = ClntIntfIdToTributary0Map
-
-        if ClntIntfIdToTributary1Map !=  None:
-            obj['ClntIntfIdToTributary1Map'] = ClntIntfIdToTributary1Map
-
-        if EnableRxPRBSChecker !=  None:
-            obj['EnableRxPRBSChecker'] = EnableRxPRBSChecker
-
-        if TxPulseShapeFltrRollOff !=  None:
-            obj['TxPulseShapeFltrRollOff'] = TxPulseShapeFltrRollOff
-
-        if TxPower !=  None:
-            obj['TxPower'] = TxPower
-
-        if RxPRBSInvertPattern !=  None:
-            obj['RxPRBSInvertPattern'] = RxPRBSInvertPattern
-
-        if TxPowerRampdBmPerSec !=  None:
-            obj['TxPowerRampdBmPerSec'] = TxPowerRampdBmPerSec
-
-        if EnableTxPRBS !=  None:
-            obj['EnableTxPRBS'] = EnableTxPRBS
-
-        if TxPRBSInvertPattern !=  None:
-            obj['TxPRBSInvertPattern'] = TxPRBSInvertPattern
-
-        if AdminState !=  None:
-            obj['AdminState'] = AdminState
-
-        if ChannelNumber !=  None:
-            obj['ChannelNumber'] = ChannelNumber
-
-        if FECMode !=  None:
-            obj['FECMode'] = FECMode
-
-        if ModulationFmt !=  None:
-            obj['ModulationFmt'] = ModulationFmt
-
-        if TxPulseShapeFltrType !=  None:
-            obj['TxPulseShapeFltrType'] = TxPulseShapeFltrType
-
-        if RxPRBSPattern !=  None:
-            obj['RxPRBSPattern'] = RxPRBSPattern
-
-        if TxPRBSPattern !=  None:
-            obj['TxPRBSPattern'] = TxPRBSPattern
-
-        if DiffEncoding !=  None:
-            obj['DiffEncoding'] = DiffEncoding
-
-        reqUrl =  self.cfgUrlBase+'DWDMModuleNwIntf'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout) 
-        return r
-
-    def patchUpdateDWDMModuleNwIntf(self,
-                                    NwIntfId,
-                                    ModuleId,
-                                    op,
-                                    path,
-                                    value,):
-        obj =  {}
-        obj['NwIntfId'] = NwIntfId
-        obj['ModuleId'] = ModuleId
-        obj['patch']=[{'op':op,'path':path,'value':value}]
-        reqUrl =  self.cfgUrlBase+'DWDMModuleNwIntf'
-        if self.authenticate == True:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout) 
-        return r
-
-    def getDWDMModuleNwIntf(self,
-                            NwIntfId,
-                            ModuleId):
-        obj =  { 
-                'NwIntfId' : int(NwIntfId),
-                'ModuleId' : int(ModuleId),
-                }
-        reqUrl =  self.cfgUrlBase + 'DWDMModuleNwIntf'
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def getDWDMModuleNwIntfById(self, objectId ):
-        reqUrl =  self.cfgUrlBase + 'DWDMModuleNwIntf'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
-        return r
-
-    def getAllDWDMModuleNwIntfs(self):
-        return self.getObjects('DWDMModuleNwIntf', self.cfgUrlBase)
 
 
     """
@@ -3807,19 +3529,16 @@ class FlexSwitch( object):
 
 
     """
-    .. automethod :: executeDWDMModuleSetBootPartition(self,
-        :param uint8 ModuleId : DWDM Module identifier DWDM Module identifier
-        :param string Partition : Active/StandBy Active/StandBy
+    .. automethod :: executeArpRefreshByIfName(self,
+        :param string IfName : All the Arp learned on given L3 interface will be re-learned All the Arp learned on given L3 interface will be re-learned
 
 	"""
-    def executeDWDMModuleSetBootPartition(self,
-                                          ModuleId,
-                                          Partition):
+    def executeArpRefreshByIfName(self,
+                                  IfName):
         obj =  { 
-                'ModuleId' : int(ModuleId),
-                'Partition' : Partition,
+                'IfName' : IfName,
                 }
-        reqUrl =  self.actionUrlBase+'DWDMModuleSetBootPartition'
+        reqUrl =  self.actionUrlBase+'ArpRefreshByIfName'
         if self.authenticate == True:
                 r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, auth=(self.user, self.passwd), verify=False) 
         else:
@@ -4361,30 +4080,6 @@ class FlexSwitch( object):
 
     def getAllBGPPolicyStmtStates(self):
         return self.getObjects('BGPPolicyStmt', self.stateUrlBase)
-
-
-    def getDWDMModuleState(self,
-                           ModuleId):
-        obj =  { 
-                'ModuleId' : int(ModuleId),
-                }
-        reqUrl =  self.stateUrlBase + 'DWDMModule'
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def getDWDMModuleStateById(self, objectId ):
-        reqUrl =  self.stateUrlBase + 'DWDMModule'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
-        return r
-
-    def getAllDWDMModuleStates(self):
-        return self.getObjects('DWDMModule', self.stateUrlBase)
 
 
     def getDhcpRelayIntfState(self,
@@ -5843,32 +5538,6 @@ class FlexSwitch( object):
 
     def getAllOspfVirtNbrEntryStates(self):
         return self.getObjects('OspfVirtNbrEntry', self.stateUrlBase)
-
-
-    def getDWDMModuleClntIntfState(self,
-                                   ClntIntfId,
-                                   ModuleId):
-        obj =  { 
-                'ClntIntfId' : int(ClntIntfId),
-                'ModuleId' : int(ModuleId),
-                }
-        reqUrl =  self.stateUrlBase + 'DWDMModuleClntIntf'
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def getDWDMModuleClntIntfStateById(self, objectId ):
-        reqUrl =  self.stateUrlBase + 'DWDMModuleClntIntf'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
-        return r
-
-    def getAllDWDMModuleClntIntfStates(self):
-        return self.getObjects('DWDMModuleClntIntf', self.stateUrlBase)
 
 
     def getRouteStatState(self,
@@ -8210,316 +7879,6 @@ class FlexSwitch( object):
         return self.getObjects('NDPEntry', self.stateUrlBase)
 
 
-    """
-    .. automethod :: createDWDMModuleClntIntf(self,
-        :param uint8 ClntIntfId : DWDM Module client interface identifier DWDM Module client interface identifier
-        :param uint8 ModuleId : DWDM Module identifier DWDM Module identifier
-        :param uint8 NwLaneTributaryToClntIntfMap : Network lane/tributary id to map to client interface Network lane/tributary id to map to client interface
-        :param uint8 HostTxEqDfe : Host interface TX deserializer equalization. s-DFE Host interface TX deserializer equalization. s-DFE
-        :param uint8 HostRxSerializerTap1Gain : Host RX Serializer tap 1 control Host RX Serializer tap 1 control
-        :param string RxPRBSPattern : RX PRBS generator pattern RX PRBS generator pattern
-        :param uint8 HostRxSerializerTap2Delay : Host RX Serializer tap 2 control Host RX Serializer tap 2 control
-        :param uint8 HostRxSerializerTap2Gain : Host RX Serializer tap 2 control Host RX Serializer tap 2 control
-        :param uint8 HostRxSerializerTap0Delay : Host RX Serializer tap 0 control Host RX Serializer tap 0 control
-        :param uint8 HostTxEqCtle : Host interface TX deserializer equalization. LELRC CTLE LE gain code. Host interface TX deserializer equalization. LELRC CTLE LE gain code.
-        :param string TxPRBSPattern : PRBS pattern to use for checker PRBS pattern to use for checker
-        :param uint8 HostTxEqLfCtle : Host interface TX deserializer equalization. LELPZRC LF-CTLE LFPZ gain code. Host interface TX deserializer equalization. LELPZRC LF-CTLE LFPZ gain code.
-        :param string AdminState : Administrative state of this client interface Administrative state of this client interface
-        :param bool RXFECDecDisable : 802.3bj FEC decoder enable/disable state for traffic from DWDM module to Host 802.3bj FEC decoder enable/disable state for traffic from DWDM module to Host
-        :param bool EnableTxPRBSChecker : Enable/Disable TX PRBS checker for all lanes of this client interface Enable/Disable TX PRBS checker for all lanes of this client interface
-        :param bool EnableHostLoopback : Enable/Disable loopback on all host lanes of this client interface Enable/Disable loopback on all host lanes of this client interface
-        :param uint8 HostRxSerializerTap0Gain : Host RX Serializer tap 0 control Host RX Serializer tap 0 control
-        :param bool TXFECDecDisable : 802.3bj FEC decoder enable/disable state for traffic from Host to DWDM Module 802.3bj FEC decoder enable/disable state for traffic from Host to DWDM Module
-        :param bool EnableRxPRBS : Enable/Disable RX PRBS generation for all lanes of this client interface Enable/Disable RX PRBS generation for all lanes of this client interface
-        :param bool EnableIntSerdesNWLoopback : Enable/Disable serdes internal loopback Enable/Disable serdes internal loopback
-
-	"""
-    def createDWDMModuleClntIntf(self,
-                                 ClntIntfId,
-                                 ModuleId,
-                                 NwLaneTributaryToClntIntfMap,
-                                 HostTxEqDfe=0,
-                                 HostRxSerializerTap1Gain=7,
-                                 RxPRBSPattern='2^31',
-                                 HostRxSerializerTap2Delay=5,
-                                 HostRxSerializerTap2Gain=15,
-                                 HostRxSerializerTap0Delay=7,
-                                 HostTxEqCtle=18,
-                                 TxPRBSPattern='2^31',
-                                 HostTxEqLfCtle=0,
-                                 AdminState='UP',
-                                 RXFECDecDisable=False,
-                                 EnableTxPRBSChecker=False,
-                                 EnableHostLoopback=False,
-                                 HostRxSerializerTap0Gain=7,
-                                 TXFECDecDisable=False,
-                                 EnableRxPRBS=False,
-                                 EnableIntSerdesNWLoopback=False):
-        obj =  { 
-                'ClntIntfId' : int(ClntIntfId),
-                'ModuleId' : int(ModuleId),
-                'NwLaneTributaryToClntIntfMap' : int(NwLaneTributaryToClntIntfMap),
-                'HostTxEqDfe' : int(HostTxEqDfe),
-                'HostRxSerializerTap1Gain' : int(HostRxSerializerTap1Gain),
-                'RxPRBSPattern' : RxPRBSPattern,
-                'HostRxSerializerTap2Delay' : int(HostRxSerializerTap2Delay),
-                'HostRxSerializerTap2Gain' : int(HostRxSerializerTap2Gain),
-                'HostRxSerializerTap0Delay' : int(HostRxSerializerTap0Delay),
-                'HostTxEqCtle' : int(HostTxEqCtle),
-                'TxPRBSPattern' : TxPRBSPattern,
-                'HostTxEqLfCtle' : int(HostTxEqLfCtle),
-                'AdminState' : AdminState,
-                'RXFECDecDisable' : True if RXFECDecDisable else False,
-                'EnableTxPRBSChecker' : True if EnableTxPRBSChecker else False,
-                'EnableHostLoopback' : True if EnableHostLoopback else False,
-                'HostRxSerializerTap0Gain' : int(HostRxSerializerTap0Gain),
-                'TXFECDecDisable' : True if TXFECDecDisable else False,
-                'EnableRxPRBS' : True if EnableRxPRBS else False,
-                'EnableIntSerdesNWLoopback' : True if EnableIntSerdesNWLoopback else False,
-                }
-        reqUrl =  self.cfgUrlBase+'DWDMModuleClntIntf'
-        if self.authenticate == True:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def deleteDWDMModuleClntIntf(self,
-                                 ClntIntfId,
-                                 ModuleId):
-        obj =  { 
-                'ClntIntfId' : ClntIntfId,
-                'ModuleId' : ModuleId,
-                }
-        reqUrl =  self.cfgUrlBase+'DWDMModuleClntIntf'
-        if self.authenticate == True:
-                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def deleteDWDMModuleClntIntfById(self, objectId ):
-        reqUrl =  self.cfgUrlBase+'DWDMModuleClntIntf'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
-        else:
-                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
-        return r
-
-    def updateDWDMModuleClntIntf(self,
-                                 ClntIntfId,
-                                 ModuleId,
-                                 NwLaneTributaryToClntIntfMap = None,
-                                 HostTxEqDfe = None,
-                                 HostRxSerializerTap1Gain = None,
-                                 RxPRBSPattern = None,
-                                 HostRxSerializerTap2Delay = None,
-                                 HostRxSerializerTap2Gain = None,
-                                 HostRxSerializerTap0Delay = None,
-                                 HostTxEqCtle = None,
-                                 TxPRBSPattern = None,
-                                 HostTxEqLfCtle = None,
-                                 AdminState = None,
-                                 RXFECDecDisable = None,
-                                 EnableTxPRBSChecker = None,
-                                 EnableHostLoopback = None,
-                                 HostRxSerializerTap0Gain = None,
-                                 TXFECDecDisable = None,
-                                 EnableRxPRBS = None,
-                                 EnableIntSerdesNWLoopback = None):
-        obj =  {}
-        if ClntIntfId != None :
-            obj['ClntIntfId'] = int(ClntIntfId)
-
-        if ModuleId != None :
-            obj['ModuleId'] = int(ModuleId)
-
-        if NwLaneTributaryToClntIntfMap != None :
-            obj['NwLaneTributaryToClntIntfMap'] = int(NwLaneTributaryToClntIntfMap)
-
-        if HostTxEqDfe != None :
-            obj['HostTxEqDfe'] = int(HostTxEqDfe)
-
-        if HostRxSerializerTap1Gain != None :
-            obj['HostRxSerializerTap1Gain'] = int(HostRxSerializerTap1Gain)
-
-        if RxPRBSPattern != None :
-            obj['RxPRBSPattern'] = RxPRBSPattern
-
-        if HostRxSerializerTap2Delay != None :
-            obj['HostRxSerializerTap2Delay'] = int(HostRxSerializerTap2Delay)
-
-        if HostRxSerializerTap2Gain != None :
-            obj['HostRxSerializerTap2Gain'] = int(HostRxSerializerTap2Gain)
-
-        if HostRxSerializerTap0Delay != None :
-            obj['HostRxSerializerTap0Delay'] = int(HostRxSerializerTap0Delay)
-
-        if HostTxEqCtle != None :
-            obj['HostTxEqCtle'] = int(HostTxEqCtle)
-
-        if TxPRBSPattern != None :
-            obj['TxPRBSPattern'] = TxPRBSPattern
-
-        if HostTxEqLfCtle != None :
-            obj['HostTxEqLfCtle'] = int(HostTxEqLfCtle)
-
-        if AdminState != None :
-            obj['AdminState'] = AdminState
-
-        if RXFECDecDisable != None :
-            obj['RXFECDecDisable'] = True if RXFECDecDisable else False
-
-        if EnableTxPRBSChecker != None :
-            obj['EnableTxPRBSChecker'] = True if EnableTxPRBSChecker else False
-
-        if EnableHostLoopback != None :
-            obj['EnableHostLoopback'] = True if EnableHostLoopback else False
-
-        if HostRxSerializerTap0Gain != None :
-            obj['HostRxSerializerTap0Gain'] = int(HostRxSerializerTap0Gain)
-
-        if TXFECDecDisable != None :
-            obj['TXFECDecDisable'] = True if TXFECDecDisable else False
-
-        if EnableRxPRBS != None :
-            obj['EnableRxPRBS'] = True if EnableRxPRBS else False
-
-        if EnableIntSerdesNWLoopback != None :
-            obj['EnableIntSerdesNWLoopback'] = True if EnableIntSerdesNWLoopback else False
-
-        reqUrl =  self.cfgUrlBase+'DWDMModuleClntIntf'
-        if self.authenticate == True:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def updateDWDMModuleClntIntfById(self,
-                                      objectId,
-                                      NwLaneTributaryToClntIntfMap = None,
-                                      HostTxEqDfe = None,
-                                      HostRxSerializerTap1Gain = None,
-                                      RxPRBSPattern = None,
-                                      HostRxSerializerTap2Delay = None,
-                                      HostRxSerializerTap2Gain = None,
-                                      HostRxSerializerTap0Delay = None,
-                                      HostTxEqCtle = None,
-                                      TxPRBSPattern = None,
-                                      HostTxEqLfCtle = None,
-                                      AdminState = None,
-                                      RXFECDecDisable = None,
-                                      EnableTxPRBSChecker = None,
-                                      EnableHostLoopback = None,
-                                      HostRxSerializerTap0Gain = None,
-                                      TXFECDecDisable = None,
-                                      EnableRxPRBS = None,
-                                      EnableIntSerdesNWLoopback = None):
-        obj =  {}
-        if NwLaneTributaryToClntIntfMap !=  None:
-            obj['NwLaneTributaryToClntIntfMap'] = NwLaneTributaryToClntIntfMap
-
-        if HostTxEqDfe !=  None:
-            obj['HostTxEqDfe'] = HostTxEqDfe
-
-        if HostRxSerializerTap1Gain !=  None:
-            obj['HostRxSerializerTap1Gain'] = HostRxSerializerTap1Gain
-
-        if RxPRBSPattern !=  None:
-            obj['RxPRBSPattern'] = RxPRBSPattern
-
-        if HostRxSerializerTap2Delay !=  None:
-            obj['HostRxSerializerTap2Delay'] = HostRxSerializerTap2Delay
-
-        if HostRxSerializerTap2Gain !=  None:
-            obj['HostRxSerializerTap2Gain'] = HostRxSerializerTap2Gain
-
-        if HostRxSerializerTap0Delay !=  None:
-            obj['HostRxSerializerTap0Delay'] = HostRxSerializerTap0Delay
-
-        if HostTxEqCtle !=  None:
-            obj['HostTxEqCtle'] = HostTxEqCtle
-
-        if TxPRBSPattern !=  None:
-            obj['TxPRBSPattern'] = TxPRBSPattern
-
-        if HostTxEqLfCtle !=  None:
-            obj['HostTxEqLfCtle'] = HostTxEqLfCtle
-
-        if AdminState !=  None:
-            obj['AdminState'] = AdminState
-
-        if RXFECDecDisable !=  None:
-            obj['RXFECDecDisable'] = RXFECDecDisable
-
-        if EnableTxPRBSChecker !=  None:
-            obj['EnableTxPRBSChecker'] = EnableTxPRBSChecker
-
-        if EnableHostLoopback !=  None:
-            obj['EnableHostLoopback'] = EnableHostLoopback
-
-        if HostRxSerializerTap0Gain !=  None:
-            obj['HostRxSerializerTap0Gain'] = HostRxSerializerTap0Gain
-
-        if TXFECDecDisable !=  None:
-            obj['TXFECDecDisable'] = TXFECDecDisable
-
-        if EnableRxPRBS !=  None:
-            obj['EnableRxPRBS'] = EnableRxPRBS
-
-        if EnableIntSerdesNWLoopback !=  None:
-            obj['EnableIntSerdesNWLoopback'] = EnableIntSerdesNWLoopback
-
-        reqUrl =  self.cfgUrlBase+'DWDMModuleClntIntf'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout) 
-        return r
-
-    def patchUpdateDWDMModuleClntIntf(self,
-                                      ClntIntfId,
-                                      ModuleId,
-                                      op,
-                                      path,
-                                      value,):
-        obj =  {}
-        obj['ClntIntfId'] = ClntIntfId
-        obj['ModuleId'] = ModuleId
-        obj['patch']=[{'op':op,'path':path,'value':value}]
-        reqUrl =  self.cfgUrlBase+'DWDMModuleClntIntf'
-        if self.authenticate == True:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout) 
-        return r
-
-    def getDWDMModuleClntIntf(self,
-                              ClntIntfId,
-                              ModuleId):
-        obj =  { 
-                'ClntIntfId' : int(ClntIntfId),
-                'ModuleId' : int(ModuleId),
-                }
-        reqUrl =  self.cfgUrlBase + 'DWDMModuleClntIntf'
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def getDWDMModuleClntIntfById(self, objectId ):
-        reqUrl =  self.cfgUrlBase + 'DWDMModuleClntIntf'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
-        return r
-
-    def getAllDWDMModuleClntIntfs(self):
-        return self.getObjects('DWDMModuleClntIntf', self.cfgUrlBase)
-
-
     def getTemperatureSensorState(self,
                                   Name):
         obj =  { 
@@ -9563,32 +8922,6 @@ class FlexSwitch( object):
 
     def getAllIppLinkStates(self):
         return self.getObjects('IppLink', self.stateUrlBase)
-
-
-    def getDWDMModuleNwIntfState(self,
-                                 NwIntfId,
-                                 ModuleId):
-        obj =  { 
-                'NwIntfId' : int(NwIntfId),
-                'ModuleId' : int(ModuleId),
-                }
-        reqUrl =  self.stateUrlBase + 'DWDMModuleNwIntf'
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def getDWDMModuleNwIntfStateById(self, objectId ):
-        reqUrl =  self.stateUrlBase + 'DWDMModuleNwIntf'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
-        return r
-
-    def getAllDWDMModuleNwIntfStates(self):
-        return self.getObjects('DWDMModuleNwIntf', self.stateUrlBase)
 
 
     """
@@ -11046,26 +10379,6 @@ class FlexSwitch( object):
         return self.getObjects('BGPv6Aggregate', self.cfgUrlBase)
 
 
-    """
-    .. automethod :: executeDWDMModuleFWDownload(self,
-        :param uint8 ModuleId : DWDM Module identifier DWDM Module identifier
-        :param string FileName : Firmware file name or absolute file location Firmware file name or absolute file location
-
-	"""
-    def executeDWDMModuleFWDownload(self,
-                                    ModuleId,
-                                    FileName):
-        obj =  { 
-                'ModuleId' : int(ModuleId),
-                'FileName' : FileName,
-                }
-        reqUrl =  self.actionUrlBase+'DWDMModuleFWDownload'
-        if self.authenticate == True:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers) 
-        return r
-
     def getThermalState(self,
                         ThermalId):
         obj =  { 
@@ -11701,132 +11014,75 @@ class FlexSwitch( object):
         return self.getObjects('BGPPolicyAction', self.stateUrlBase)
 
 
-    """
-    .. automethod :: createVxlanInstance(self,
-        :param uint32 Vni : VNI domain VNI domain
-        :param uint16 VlanId : Vlan associated with the Access targets.  Used in conjunction with a given VTEP inner-vlan-handling-mode Vlan associated with the Access targets.  Used in conjunction with a given VTEP inner-vlan-handling-mode
-
-	"""
-    def createVxlanInstance(self,
-                            Vni,
-                            VlanId):
-        obj =  { 
-                'Vni' : int(Vni),
-                'VlanId' : int(VlanId),
-                }
-        reqUrl =  self.cfgUrlBase+'VxlanInstance'
-        if self.authenticate == True:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def deleteVxlanInstance(self,
-                            Vni):
-        obj =  { 
-                'Vni' : Vni,
-                }
-        reqUrl =  self.cfgUrlBase+'VxlanInstance'
-        if self.authenticate == True:
-                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def deleteVxlanInstanceById(self, objectId ):
-        reqUrl =  self.cfgUrlBase+'VxlanInstance'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
-        else:
-                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
-        return r
-
-    def updateVxlanInstance(self,
-                            Vni,
-                            VlanId = None):
+    def updateIsisGlobal(self,
+                         Vrf,
+                         Enable = None):
         obj =  {}
-        if Vni != None :
-            obj['Vni'] = int(Vni)
+        if Vrf != None :
+            obj['Vrf'] = Vrf
 
-        if VlanId != None :
-            obj['VlanId'] = int(VlanId)
+        if Enable != None :
+            obj['Enable'] = True if Enable else False
 
-        reqUrl =  self.cfgUrlBase+'VxlanInstance'
+        reqUrl =  self.cfgUrlBase+'IsisGlobal'
         if self.authenticate == True:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
         return r
 
-    def updateVxlanInstanceById(self,
-                                 objectId,
-                                 VlanId = None):
+    def updateIsisGlobalById(self,
+                              objectId,
+                              Enable = None):
         obj =  {}
-        if VlanId !=  None:
-            obj['VlanId'] = VlanId
+        if Enable !=  None:
+            obj['Enable'] = Enable
 
-        reqUrl =  self.cfgUrlBase+'VxlanInstance'+"/%s"%(objectId)
+        reqUrl =  self.cfgUrlBase+'IsisGlobal'+"/%s"%(objectId)
         if self.authenticate == True:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout) 
         return r
 
-    def patchUpdateVxlanInstance(self,
-                                 Vni,
-                                 op,
-                                 path,
-                                 value,):
+    def patchUpdateIsisGlobal(self,
+                              Vrf,
+                              op,
+                              path,
+                              value,):
         obj =  {}
-        obj['Vni'] = Vni
+        obj['Vrf'] = Vrf
         obj['patch']=[{'op':op,'path':path,'value':value}]
-        reqUrl =  self.cfgUrlBase+'VxlanInstance'
+        reqUrl =  self.cfgUrlBase+'IsisGlobal'
         if self.authenticate == True:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout) 
         return r
 
-    def getVxlanInstance(self,
-                         Vni):
+    def getIsisGlobal(self,
+                      Vrf):
         obj =  { 
-                'Vni' : int(Vni),
+                'Vrf' : Vrf,
                 }
-        reqUrl =  self.cfgUrlBase + 'VxlanInstance'
+        reqUrl =  self.cfgUrlBase + 'IsisGlobal'
         if self.authenticate == True:
                 r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
         return r
 
-    def getVxlanInstanceById(self, objectId ):
-        reqUrl =  self.cfgUrlBase + 'VxlanInstance'+"/%s"%(objectId)
+    def getIsisGlobalById(self, objectId ):
+        reqUrl =  self.cfgUrlBase + 'IsisGlobal'+"/%s"%(objectId)
         if self.authenticate == True:
                 r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
         return r
 
-    def getAllVxlanInstances(self):
-        return self.getObjects('VxlanInstance', self.cfgUrlBase)
+    def getAllIsisGlobals(self):
+        return self.getObjects('IsisGlobal', self.cfgUrlBase)
 
-
-    """
-    .. automethod :: executeArpRefreshByIfName(self,
-        :param string IfName : All the Arp learned on given L3 interface will be re-learned All the Arp learned on given L3 interface will be re-learned
-
-	"""
-    def executeArpRefreshByIfName(self,
-                                  IfName):
-        obj =  { 
-                'IfName' : IfName,
-                }
-        reqUrl =  self.actionUrlBase+'ArpRefreshByIfName'
-        if self.authenticate == True:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers) 
-        return r
 
     def getBGPPolicyDefinitionState(self,
                                     Name):
@@ -12330,181 +11586,6 @@ class FlexSwitch( object):
 
     def getAllVoltageSensorStates(self):
         return self.getObjects('VoltageSensor', self.stateUrlBase)
-
-
-    def getDWDMModuleNwIntfPMState(self,
-                                   Resource,
-                                   NwIntfId,
-                                   Type,
-                                   Class,
-                                   ModuleId):
-        obj =  { 
-                'Resource' : Resource,
-                'NwIntfId' : int(NwIntfId),
-                'Type' : Type,
-                'Class' : Class,
-                'ModuleId' : int(ModuleId),
-                }
-        reqUrl =  self.stateUrlBase + 'DWDMModuleNwIntfPM'
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def getDWDMModuleNwIntfPMStateById(self, objectId ):
-        reqUrl =  self.stateUrlBase + 'DWDMModuleNwIntfPM'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
-        return r
-
-    def getAllDWDMModuleNwIntfPMStates(self):
-        return self.getObjects('DWDMModuleNwIntfPM', self.stateUrlBase)
-
-
-    """
-    .. automethod :: createDWDMModule(self,
-        :param uint8 ModuleId : DWDM Module identifier DWDM Module identifier
-        :param bool EnableExtPMTickSrc : Enable/Disable external tick source for performance monitoring Enable/Disable external tick source for performance monitoring
-        :param uint8 PMInterval : Performance monitoring interval Performance monitoring interval
-        :param string AdminState : Reset state of this dwdm module (false (Reset deasserted) Reset state of this dwdm module (false (Reset deasserted)
-        :param bool IndependentLaneMode : Network lane configuration for the DWDM Module. true-Independent lanes Network lane configuration for the DWDM Module. true-Independent lanes
-
-	"""
-    def createDWDMModule(self,
-                         ModuleId,
-                         EnableExtPMTickSrc=False,
-                         PMInterval=1,
-                         AdminState='DOWN',
-                         IndependentLaneMode=True):
-        obj =  { 
-                'ModuleId' : int(ModuleId),
-                'EnableExtPMTickSrc' : True if EnableExtPMTickSrc else False,
-                'PMInterval' : int(PMInterval),
-                'AdminState' : AdminState,
-                'IndependentLaneMode' : True if IndependentLaneMode else False,
-                }
-        reqUrl =  self.cfgUrlBase+'DWDMModule'
-        if self.authenticate == True:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def deleteDWDMModule(self,
-                         ModuleId):
-        obj =  { 
-                'ModuleId' : ModuleId,
-                }
-        reqUrl =  self.cfgUrlBase+'DWDMModule'
-        if self.authenticate == True:
-                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def deleteDWDMModuleById(self, objectId ):
-        reqUrl =  self.cfgUrlBase+'DWDMModule'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
-        else:
-                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
-        return r
-
-    def updateDWDMModule(self,
-                         ModuleId,
-                         EnableExtPMTickSrc = None,
-                         PMInterval = None,
-                         AdminState = None,
-                         IndependentLaneMode = None):
-        obj =  {}
-        if ModuleId != None :
-            obj['ModuleId'] = int(ModuleId)
-
-        if EnableExtPMTickSrc != None :
-            obj['EnableExtPMTickSrc'] = True if EnableExtPMTickSrc else False
-
-        if PMInterval != None :
-            obj['PMInterval'] = int(PMInterval)
-
-        if AdminState != None :
-            obj['AdminState'] = AdminState
-
-        if IndependentLaneMode != None :
-            obj['IndependentLaneMode'] = True if IndependentLaneMode else False
-
-        reqUrl =  self.cfgUrlBase+'DWDMModule'
-        if self.authenticate == True:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def updateDWDMModuleById(self,
-                              objectId,
-                              EnableExtPMTickSrc = None,
-                              PMInterval = None,
-                              AdminState = None,
-                              IndependentLaneMode = None):
-        obj =  {}
-        if EnableExtPMTickSrc !=  None:
-            obj['EnableExtPMTickSrc'] = EnableExtPMTickSrc
-
-        if PMInterval !=  None:
-            obj['PMInterval'] = PMInterval
-
-        if AdminState !=  None:
-            obj['AdminState'] = AdminState
-
-        if IndependentLaneMode !=  None:
-            obj['IndependentLaneMode'] = IndependentLaneMode
-
-        reqUrl =  self.cfgUrlBase+'DWDMModule'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout) 
-        return r
-
-    def patchUpdateDWDMModule(self,
-                              ModuleId,
-                              op,
-                              path,
-                              value,):
-        obj =  {}
-        obj['ModuleId'] = ModuleId
-        obj['patch']=[{'op':op,'path':path,'value':value}]
-        reqUrl =  self.cfgUrlBase+'DWDMModule'
-        if self.authenticate == True:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout) 
-        return r
-
-    def getDWDMModule(self,
-                      ModuleId):
-        obj =  { 
-                'ModuleId' : int(ModuleId),
-                }
-        reqUrl =  self.cfgUrlBase + 'DWDMModule'
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
-        return r
-
-    def getDWDMModuleById(self, objectId ):
-        reqUrl =  self.cfgUrlBase + 'DWDMModule'+"/%s"%(objectId)
-        if self.authenticate == True:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
-        else:
-                r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
-        return r
-
-    def getAllDWDMModules(self):
-        return self.getObjects('DWDMModule', self.cfgUrlBase)
 
 
     """
@@ -13954,74 +13035,114 @@ class FlexSwitch( object):
         return self.getObjects('RouteStatsPerProtocol', self.stateUrlBase)
 
 
-    def updateIsisGlobal(self,
-                         Vrf,
-                         Enable = None):
+    """
+    .. automethod :: createVxlanInstance(self,
+        :param uint32 Vni : VNI domain VNI domain
+        :param uint16 VlanId : Vlan associated with the Access targets.  Used in conjunction with a given VTEP inner-vlan-handling-mode Vlan associated with the Access targets.  Used in conjunction with a given VTEP inner-vlan-handling-mode
+
+	"""
+    def createVxlanInstance(self,
+                            Vni,
+                            VlanId):
+        obj =  { 
+                'Vni' : int(Vni),
+                'VlanId' : int(VlanId),
+                }
+        reqUrl =  self.cfgUrlBase+'VxlanInstance'
+        if self.authenticate == True:
+                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
+        else:
+                r = requests.post(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
+        return r
+
+    def deleteVxlanInstance(self,
+                            Vni):
+        obj =  { 
+                'Vni' : Vni,
+                }
+        reqUrl =  self.cfgUrlBase+'VxlanInstance'
+        if self.authenticate == True:
+                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
+        else:
+                r = requests.delete(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
+        return r
+
+    def deleteVxlanInstanceById(self, objectId ):
+        reqUrl =  self.cfgUrlBase+'VxlanInstance'+"/%s"%(objectId)
+        if self.authenticate == True:
+                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
+        else:
+                r = requests.delete(reqUrl, data=None, headers=headers,timeout=self.timeout) 
+        return r
+
+    def updateVxlanInstance(self,
+                            Vni,
+                            VlanId = None):
         obj =  {}
-        if Vrf != None :
-            obj['Vrf'] = Vrf
+        if Vni != None :
+            obj['Vni'] = int(Vni)
 
-        if Enable != None :
-            obj['Enable'] = True if Enable else False
+        if VlanId != None :
+            obj['VlanId'] = int(VlanId)
 
-        reqUrl =  self.cfgUrlBase+'IsisGlobal'
+        reqUrl =  self.cfgUrlBase+'VxlanInstance'
         if self.authenticate == True:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
         return r
 
-    def updateIsisGlobalById(self,
-                              objectId,
-                              Enable = None):
+    def updateVxlanInstanceById(self,
+                                 objectId,
+                                 VlanId = None):
         obj =  {}
-        if Enable !=  None:
-            obj['Enable'] = Enable
+        if VlanId !=  None:
+            obj['VlanId'] = VlanId
 
-        reqUrl =  self.cfgUrlBase+'IsisGlobal'+"/%s"%(objectId)
+        reqUrl =  self.cfgUrlBase+'VxlanInstance'+"/%s"%(objectId)
         if self.authenticate == True:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=headers,timeout=self.timeout) 
         return r
 
-    def patchUpdateIsisGlobal(self,
-                              Vrf,
-                              op,
-                              path,
-                              value,):
+    def patchUpdateVxlanInstance(self,
+                                 Vni,
+                                 op,
+                                 path,
+                                 value,):
         obj =  {}
-        obj['Vrf'] = Vrf
+        obj['Vni'] = Vni
         obj['patch']=[{'op':op,'path':path,'value':value}]
-        reqUrl =  self.cfgUrlBase+'IsisGlobal'
+        reqUrl =  self.cfgUrlBase+'VxlanInstance'
         if self.authenticate == True:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.patch(reqUrl, data=json.dumps(obj), headers=patchheaders, timeout=self.timeout) 
         return r
 
-    def getIsisGlobal(self,
-                      Vrf):
+    def getVxlanInstance(self,
+                         Vni):
         obj =  { 
-                'Vrf' : Vrf,
+                'Vni' : int(Vni),
                 }
-        reqUrl =  self.cfgUrlBase + 'IsisGlobal'
+        reqUrl =  self.cfgUrlBase + 'VxlanInstance'
         if self.authenticate == True:
                 r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.get(reqUrl, data=json.dumps(obj), headers=headers, timeout=self.timeout) 
         return r
 
-    def getIsisGlobalById(self, objectId ):
-        reqUrl =  self.cfgUrlBase + 'IsisGlobal'+"/%s"%(objectId)
+    def getVxlanInstanceById(self, objectId ):
+        reqUrl =  self.cfgUrlBase + 'VxlanInstance'+"/%s"%(objectId)
         if self.authenticate == True:
                 r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout, auth=(self.user, self.passwd), verify=False) 
         else:
                 r = requests.get(reqUrl, data=None, headers=headers, timeout=self.timeout) 
         return r
 
-    def getAllIsisGlobals(self):
-        return self.getObjects('IsisGlobal', self.cfgUrlBase)
+    def getAllVxlanInstances(self):
+        return self.getObjects('VxlanInstance', self.cfgUrlBase)
 
 
     def getBGPv6RouteState(self,

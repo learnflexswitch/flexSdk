@@ -414,56 +414,6 @@ class FlexSwitchShow( object):
         self.tblPrintObject('Vlan', header, rows)
 
 
-    def printDWDMModuleNwIntfs(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('NwIntfId')
-            header.append('ModuleId')
-            header.append('ClntIntfIdToTributary0Map')
-            header.append('ClntIntfIdToTributary1Map')
-            header.append('EnableRxPRBSChecker')
-            header.append('TxPulseShapeFltrRollOff')
-            header.append('TxPower')
-            header.append('RxPRBSInvertPattern')
-            header.append('TxPowerRampdBmPerSec')
-            header.append('EnableTxPRBS')
-            header.append('TxPRBSInvertPattern')
-            header.append('AdminState')
-            header.append('ChannelNumber')
-            header.append('FECMode')
-            header.append('ModulationFmt')
-            header.append('TxPulseShapeFltrType')
-            header.append('RxPRBSPattern')
-            header.append('TxPRBSPattern')
-            header.append('DiffEncoding')
-
-        objs = self.swtch.getAllDWDMModuleNwIntfs()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['NwIntfId'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['ClntIntfIdToTributary0Map'])
-            values.append('%s' % o['ClntIntfIdToTributary1Map'])
-            values.append('%s' % o['EnableRxPRBSChecker'])
-            values.append('%s' % o['TxPulseShapeFltrRollOff'])
-            values.append('%s' % o['TxPower'])
-            values.append('%s' % o['RxPRBSInvertPattern'])
-            values.append('%s' % o['TxPowerRampdBmPerSec'])
-            values.append('%s' % o['EnableTxPRBS'])
-            values.append('%s' % o['TxPRBSInvertPattern'])
-            values.append('%s' % o['AdminState'])
-            values.append('%s' % o['ChannelNumber'])
-            values.append('%s' % o['FECMode'])
-            values.append('%s' % o['ModulationFmt'])
-            values.append('%s' % o['TxPulseShapeFltrType'])
-            values.append('%s' % o['RxPRBSPattern'])
-            values.append('%s' % o['TxPRBSPattern'])
-            values.append('%s' % o['DiffEncoding'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModuleNwIntf', header, rows)
-
-
     def printComponentLoggings(self, addHeader=True, brief=None):
         header = []; rows = []
         if addHeader:
@@ -2357,141 +2307,6 @@ class FlexSwitchShow( object):
         self.tblPrintObject('BGPPolicyStmtState', header, rows)
 
 
-    def printDWDMModuleStates(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('ModuleId')
-            header.append('ModuleState')
-            header.append('ModuleVoltage')
-            header.append('ModuleTemp')
-            header.append('Populated')
-            header.append('VendorName')
-            header.append('VendorPartNum')
-            header.append('VendorSerialNum')
-            header.append('VendorDateCode')
-            header.append('ModuleHWVersion')
-            header.append('ModuleActiveFWVersion')
-            header.append('ModuleStandByFWVersion')
-            header.append('ModuleActiveFWStatus')
-            header.append('ModuleStandByFWStatus')
-
-        objs = self.swtch.getAllDWDMModuleStates()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['ModuleState'])
-            values.append('%s' % o['ModuleVoltage'])
-            values.append('%s' % o['ModuleTemp'])
-            values.append('%s' % o['Populated'])
-            values.append('%s' % o['VendorName'])
-            values.append('%s' % o['VendorPartNum'])
-            values.append('%s' % o['VendorSerialNum'])
-            values.append('%s' % o['VendorDateCode'])
-            values.append('%s' % o['ModuleHWVersion'])
-            values.append('%s' % o['ModuleActiveFWVersion'])
-            values.append('%s' % o['ModuleStandByFWVersion'])
-            values.append('%s' % o['ModuleActiveFWStatus'])
-            values.append('%s' % o['ModuleStandByFWStatus'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModuleState', header, rows)
-
-
-    def printDWDMModuleState(self, ModuleId, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('ModuleId')
-            header.append('ModuleState')
-            header.append('ModuleVoltage')
-            header.append('ModuleTemp')
-            header.append('Populated')
-            header.append('VendorName')
-            header.append('VendorPartNum')
-            header.append('VendorSerialNum')
-            header.append('VendorDateCode')
-            header.append('ModuleHWVersion')
-            header.append('ModuleActiveFWVersion')
-            header.append('ModuleStandByFWVersion')
-            header.append('ModuleActiveFWStatus')
-            header.append('ModuleStandByFWStatus')
-
-        rawobj = self.swtch.getDWDMModuleState(
-                                               ModuleId)
-        if rawobj.status_code in self.httpSuccessCodes:
-            obj = rawobj.json()
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['ModuleState'])
-            values.append('%s' % o['ModuleVoltage'])
-            values.append('%s' % o['ModuleTemp'])
-            values.append('%s' % o['Populated'])
-            values.append('%s' % o['VendorName'])
-            values.append('%s' % o['VendorPartNum'])
-            values.append('%s' % o['VendorSerialNum'])
-            values.append('%s' % o['VendorDateCode'])
-            values.append('%s' % o['ModuleHWVersion'])
-            values.append('%s' % o['ModuleActiveFWVersion'])
-            values.append('%s' % o['ModuleStandByFWVersion'])
-            values.append('%s' % o['ModuleActiveFWStatus'])
-            values.append('%s' % o['ModuleStandByFWStatus'])
-            rows.append(values)
-            self.tblPrintObject('DWDMModuleState', header, rows)
-
-        else:
-            print rawobj.content
-
-    def printCombinedDWDMModuleStates(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('ModuleId')
-            header.append('ModuleState')
-            header.append('ModuleVoltage')
-            header.append('ModuleTemp')
-            header.append('Populated')
-            header.append('VendorName')
-            header.append('VendorPartNum')
-            header.append('VendorSerialNum')
-            header.append('VendorDateCode')
-            header.append('ModuleHWVersion')
-            header.append('ModuleActiveFWVersion')
-            header.append('ModuleStandByFWVersion')
-            header.append('ModuleActiveFWStatus')
-            header.append('ModuleStandByFWStatus')
-            header.append('EnableExtPMTickSrc')
-            header.append('PMInterval')
-            header.append('AdminState')
-            header.append('IndependentLaneMode')
-
-        objs = self.swtch.getAllDWDMModuleStates()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['ModuleState'])
-            values.append('%s' % o['ModuleVoltage'])
-            values.append('%s' % o['ModuleTemp'])
-            values.append('%s' % o['Populated'])
-            values.append('%s' % o['VendorName'])
-            values.append('%s' % o['VendorPartNum'])
-            values.append('%s' % o['VendorSerialNum'])
-            values.append('%s' % o['VendorDateCode'])
-            values.append('%s' % o['ModuleHWVersion'])
-            values.append('%s' % o['ModuleActiveFWVersion'])
-            values.append('%s' % o['ModuleStandByFWVersion'])
-            values.append('%s' % o['ModuleActiveFWStatus'])
-            values.append('%s' % o['ModuleStandByFWStatus'])
-            r = self.swtch.getDWDMModule(o['ModuleId'])
-            if r.status_code in self.httpSuccessCodes:
-                o = r.json()['Object']
-                values.append('%s' % o['EnableExtPMTickSrc'])
-                values.append('%s' % o['PMInterval'])
-                values.append('%s' % o['AdminState'])
-                values.append('%s' % o['IndependentLaneMode'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModuleState', header, rows)
-
-
     def printDhcpRelayIntfStates(self, addHeader=True, brief=None):
         header = []; rows = []
         if addHeader:
@@ -3677,122 +3492,6 @@ class FlexSwitchShow( object):
         else:
             print rawobj.content
 
-    def printDWDMModuleClntIntfStates(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('ClntIntfId')
-            header.append('ModuleId')
-            header.append('PRBSTxErrCntLane0')
-            header.append('PRBSTxErrCntLane1')
-            header.append('PRBSTxErrCntLane2')
-            header.append('PRBSTxErrCntLane3')
-
-        objs = self.swtch.getAllDWDMModuleClntIntfStates()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['ClntIntfId'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['PRBSTxErrCntLane0'])
-            values.append('%s' % o['PRBSTxErrCntLane1'])
-            values.append('%s' % o['PRBSTxErrCntLane2'])
-            values.append('%s' % o['PRBSTxErrCntLane3'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModuleClntIntfState', header, rows)
-
-
-    def printDWDMModuleClntIntfState(self, ClntIntfId,ModuleId, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('ClntIntfId')
-            header.append('ModuleId')
-            header.append('PRBSTxErrCntLane0')
-            header.append('PRBSTxErrCntLane1')
-            header.append('PRBSTxErrCntLane2')
-            header.append('PRBSTxErrCntLane3')
-
-        rawobj = self.swtch.getDWDMModuleClntIntfState(
-                                                       ClntIntfId,
-                                                       ModuleId)
-        if rawobj.status_code in self.httpSuccessCodes:
-            obj = rawobj.json()
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['ClntIntfId'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['PRBSTxErrCntLane0'])
-            values.append('%s' % o['PRBSTxErrCntLane1'])
-            values.append('%s' % o['PRBSTxErrCntLane2'])
-            values.append('%s' % o['PRBSTxErrCntLane3'])
-            rows.append(values)
-            self.tblPrintObject('DWDMModuleClntIntfState', header, rows)
-
-        else:
-            print rawobj.content
-
-    def printCombinedDWDMModuleClntIntfStates(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('ClntIntfId')
-            header.append('ModuleId')
-            header.append('PRBSTxErrCntLane0')
-            header.append('PRBSTxErrCntLane1')
-            header.append('PRBSTxErrCntLane2')
-            header.append('PRBSTxErrCntLane3')
-            header.append('NwLaneTributaryToClntIntfMap')
-            header.append('HostTxEqDfe')
-            header.append('HostRxSerializerTap1Gain')
-            header.append('RxPRBSPattern')
-            header.append('HostRxSerializerTap2Delay')
-            header.append('HostRxSerializerTap2Gain')
-            header.append('HostRxSerializerTap0Delay')
-            header.append('HostTxEqCtle')
-            header.append('TxPRBSPattern')
-            header.append('HostTxEqLfCtle')
-            header.append('AdminState')
-            header.append('RXFECDecDisable')
-            header.append('EnableTxPRBSChecker')
-            header.append('EnableHostLoopback')
-            header.append('HostRxSerializerTap0Gain')
-            header.append('TXFECDecDisable')
-            header.append('EnableRxPRBS')
-            header.append('EnableIntSerdesNWLoopback')
-
-        objs = self.swtch.getAllDWDMModuleClntIntfStates()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['ClntIntfId'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['PRBSTxErrCntLane0'])
-            values.append('%s' % o['PRBSTxErrCntLane1'])
-            values.append('%s' % o['PRBSTxErrCntLane2'])
-            values.append('%s' % o['PRBSTxErrCntLane3'])
-            r = self.swtch.getDWDMModuleClntIntf(o['ClntIntfId'], o['ModuleId'])
-            if r.status_code in self.httpSuccessCodes:
-                o = r.json()['Object']
-                values.append('%s' % o['NwLaneTributaryToClntIntfMap'])
-                values.append('%s' % o['HostTxEqDfe'])
-                values.append('%s' % o['HostRxSerializerTap1Gain'])
-                values.append('%s' % o['RxPRBSPattern'])
-                values.append('%s' % o['HostRxSerializerTap2Delay'])
-                values.append('%s' % o['HostRxSerializerTap2Gain'])
-                values.append('%s' % o['HostRxSerializerTap0Delay'])
-                values.append('%s' % o['HostTxEqCtle'])
-                values.append('%s' % o['TxPRBSPattern'])
-                values.append('%s' % o['HostTxEqLfCtle'])
-                values.append('%s' % o['AdminState'])
-                values.append('%s' % o['RXFECDecDisable'])
-                values.append('%s' % o['EnableTxPRBSChecker'])
-                values.append('%s' % o['EnableHostLoopback'])
-                values.append('%s' % o['HostRxSerializerTap0Gain'])
-                values.append('%s' % o['TXFECDecDisable'])
-                values.append('%s' % o['EnableRxPRBS'])
-                values.append('%s' % o['EnableIntSerdesNWLoopback'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModuleClntIntfState', header, rows)
-
-
     def printRouteStatStates(self, addHeader=True, brief=None):
         header = []; rows = []
         if addHeader:
@@ -4307,6 +4006,7 @@ class FlexSwitchShow( object):
             values.append('%s' % o['Description'])
             rows.append(values)
         self.tblPrintObject('SystemParam', header, rows)
+
 
 
     def printBfdGlobals(self, addHeader=True, brief=None):
@@ -6140,58 +5840,6 @@ class FlexSwitchShow( object):
         else:
             print rawobj.content
 
-    def printDWDMModuleClntIntfs(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('ClntIntfId')
-            header.append('ModuleId')
-            header.append('NwLaneTributaryToClntIntfMap')
-            header.append('HostTxEqDfe')
-            header.append('HostRxSerializerTap1Gain')
-            header.append('RxPRBSPattern')
-            header.append('HostRxSerializerTap2Delay')
-            header.append('HostRxSerializerTap2Gain')
-            header.append('HostRxSerializerTap0Delay')
-            header.append('HostTxEqCtle')
-            header.append('TxPRBSPattern')
-            header.append('HostTxEqLfCtle')
-            header.append('AdminState')
-            header.append('RXFECDecDisable')
-            header.append('EnableTxPRBSChecker')
-            header.append('EnableHostLoopback')
-            header.append('HostRxSerializerTap0Gain')
-            header.append('TXFECDecDisable')
-            header.append('EnableRxPRBS')
-            header.append('EnableIntSerdesNWLoopback')
-
-        objs = self.swtch.getAllDWDMModuleClntIntfs()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['ClntIntfId'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['NwLaneTributaryToClntIntfMap'])
-            values.append('%s' % o['HostTxEqDfe'])
-            values.append('%s' % o['HostRxSerializerTap1Gain'])
-            values.append('%s' % o['RxPRBSPattern'])
-            values.append('%s' % o['HostRxSerializerTap2Delay'])
-            values.append('%s' % o['HostRxSerializerTap2Gain'])
-            values.append('%s' % o['HostRxSerializerTap0Delay'])
-            values.append('%s' % o['HostTxEqCtle'])
-            values.append('%s' % o['TxPRBSPattern'])
-            values.append('%s' % o['HostTxEqLfCtle'])
-            values.append('%s' % o['AdminState'])
-            values.append('%s' % o['RXFECDecDisable'])
-            values.append('%s' % o['EnableTxPRBSChecker'])
-            values.append('%s' % o['EnableHostLoopback'])
-            values.append('%s' % o['HostRxSerializerTap0Gain'])
-            values.append('%s' % o['TXFECDecDisable'])
-            values.append('%s' % o['EnableRxPRBS'])
-            values.append('%s' % o['EnableIntSerdesNWLoopback'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModuleClntIntf', header, rows)
-
-
     def printTemperatureSensorStates(self, addHeader=True, brief=None):
         header = []; rows = []
         if addHeader:
@@ -7015,180 +6663,6 @@ class FlexSwitchShow( object):
 
         else:
             print rawobj.content
-
-    def printDWDMModuleNwIntfStates(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('NwIntfId')
-            header.append('ModuleId')
-            header.append('TxChanGridSpacing')
-            header.append('CurrentBER')
-            header.append('MinBEROverPMInterval')
-            header.append('AvgBEROverPMInterval')
-            header.append('MaxBEROverPMInterval')
-            header.append('CurrUncorrectableFECBlkCnt')
-            header.append('UncorrectableFECBlkCntOverPMInt')
-            header.append('PRBSRxErrCnt')
-            header.append('RxPower')
-            header.append('ChanFrequency')
-            header.append('CurrChromDisp')
-            header.append('AvgChromDispOverPMInt')
-            header.append('MinChromDispOverPMInt')
-            header.append('MaxChromDispOverPMInt')
-
-        objs = self.swtch.getAllDWDMModuleNwIntfStates()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['NwIntfId'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['TxChanGridSpacing'])
-            values.append('%s' % o['CurrentBER'])
-            values.append('%s' % o['MinBEROverPMInterval'])
-            values.append('%s' % o['AvgBEROverPMInterval'])
-            values.append('%s' % o['MaxBEROverPMInterval'])
-            values.append('%s' % o['CurrUncorrectableFECBlkCnt'])
-            values.append('%s' % o['UncorrectableFECBlkCntOverPMInt'])
-            values.append('%s' % o['PRBSRxErrCnt'])
-            values.append('%s' % o['RxPower'])
-            values.append('%s' % o['ChanFrequency'])
-            values.append('%s' % o['CurrChromDisp'])
-            values.append('%s' % o['AvgChromDispOverPMInt'])
-            values.append('%s' % o['MinChromDispOverPMInt'])
-            values.append('%s' % o['MaxChromDispOverPMInt'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModuleNwIntfState', header, rows)
-
-
-    def printDWDMModuleNwIntfState(self, NwIntfId,ModuleId, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('NwIntfId')
-            header.append('ModuleId')
-            header.append('TxChanGridSpacing')
-            header.append('CurrentBER')
-            header.append('MinBEROverPMInterval')
-            header.append('AvgBEROverPMInterval')
-            header.append('MaxBEROverPMInterval')
-            header.append('CurrUncorrectableFECBlkCnt')
-            header.append('UncorrectableFECBlkCntOverPMInt')
-            header.append('PRBSRxErrCnt')
-            header.append('RxPower')
-            header.append('ChanFrequency')
-            header.append('CurrChromDisp')
-            header.append('AvgChromDispOverPMInt')
-            header.append('MinChromDispOverPMInt')
-            header.append('MaxChromDispOverPMInt')
-
-        rawobj = self.swtch.getDWDMModuleNwIntfState(
-                                                     NwIntfId,
-                                                     ModuleId)
-        if rawobj.status_code in self.httpSuccessCodes:
-            obj = rawobj.json()
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['NwIntfId'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['TxChanGridSpacing'])
-            values.append('%s' % o['CurrentBER'])
-            values.append('%s' % o['MinBEROverPMInterval'])
-            values.append('%s' % o['AvgBEROverPMInterval'])
-            values.append('%s' % o['MaxBEROverPMInterval'])
-            values.append('%s' % o['CurrUncorrectableFECBlkCnt'])
-            values.append('%s' % o['UncorrectableFECBlkCntOverPMInt'])
-            values.append('%s' % o['PRBSRxErrCnt'])
-            values.append('%s' % o['RxPower'])
-            values.append('%s' % o['ChanFrequency'])
-            values.append('%s' % o['CurrChromDisp'])
-            values.append('%s' % o['AvgChromDispOverPMInt'])
-            values.append('%s' % o['MinChromDispOverPMInt'])
-            values.append('%s' % o['MaxChromDispOverPMInt'])
-            rows.append(values)
-            self.tblPrintObject('DWDMModuleNwIntfState', header, rows)
-
-        else:
-            print rawobj.content
-
-    def printCombinedDWDMModuleNwIntfStates(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('NwIntfId')
-            header.append('ModuleId')
-            header.append('TxChanGridSpacing')
-            header.append('CurrentBER')
-            header.append('MinBEROverPMInterval')
-            header.append('AvgBEROverPMInterval')
-            header.append('MaxBEROverPMInterval')
-            header.append('CurrUncorrectableFECBlkCnt')
-            header.append('UncorrectableFECBlkCntOverPMInt')
-            header.append('PRBSRxErrCnt')
-            header.append('RxPower')
-            header.append('ChanFrequency')
-            header.append('CurrChromDisp')
-            header.append('AvgChromDispOverPMInt')
-            header.append('MinChromDispOverPMInt')
-            header.append('MaxChromDispOverPMInt')
-            header.append('ClntIntfIdToTributary0Map')
-            header.append('ClntIntfIdToTributary1Map')
-            header.append('EnableRxPRBSChecker')
-            header.append('TxPulseShapeFltrRollOff')
-            header.append('TxPower')
-            header.append('RxPRBSInvertPattern')
-            header.append('TxPowerRampdBmPerSec')
-            header.append('EnableTxPRBS')
-            header.append('TxPRBSInvertPattern')
-            header.append('AdminState')
-            header.append('ChannelNumber')
-            header.append('FECMode')
-            header.append('ModulationFmt')
-            header.append('TxPulseShapeFltrType')
-            header.append('RxPRBSPattern')
-            header.append('TxPRBSPattern')
-            header.append('DiffEncoding')
-
-        objs = self.swtch.getAllDWDMModuleNwIntfStates()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['NwIntfId'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['TxChanGridSpacing'])
-            values.append('%s' % o['CurrentBER'])
-            values.append('%s' % o['MinBEROverPMInterval'])
-            values.append('%s' % o['AvgBEROverPMInterval'])
-            values.append('%s' % o['MaxBEROverPMInterval'])
-            values.append('%s' % o['CurrUncorrectableFECBlkCnt'])
-            values.append('%s' % o['UncorrectableFECBlkCntOverPMInt'])
-            values.append('%s' % o['PRBSRxErrCnt'])
-            values.append('%s' % o['RxPower'])
-            values.append('%s' % o['ChanFrequency'])
-            values.append('%s' % o['CurrChromDisp'])
-            values.append('%s' % o['AvgChromDispOverPMInt'])
-            values.append('%s' % o['MinChromDispOverPMInt'])
-            values.append('%s' % o['MaxChromDispOverPMInt'])
-            r = self.swtch.getDWDMModuleNwIntf(o['NwIntfId'], o['ModuleId'])
-            if r.status_code in self.httpSuccessCodes:
-                o = r.json()['Object']
-                values.append('%s' % o['ClntIntfIdToTributary0Map'])
-                values.append('%s' % o['ClntIntfIdToTributary1Map'])
-                values.append('%s' % o['EnableRxPRBSChecker'])
-                values.append('%s' % o['TxPulseShapeFltrRollOff'])
-                values.append('%s' % o['TxPower'])
-                values.append('%s' % o['RxPRBSInvertPattern'])
-                values.append('%s' % o['TxPowerRampdBmPerSec'])
-                values.append('%s' % o['EnableTxPRBS'])
-                values.append('%s' % o['TxPRBSInvertPattern'])
-                values.append('%s' % o['AdminState'])
-                values.append('%s' % o['ChannelNumber'])
-                values.append('%s' % o['FECMode'])
-                values.append('%s' % o['ModulationFmt'])
-                values.append('%s' % o['TxPulseShapeFltrType'])
-                values.append('%s' % o['RxPRBSPattern'])
-                values.append('%s' % o['TxPRBSPattern'])
-                values.append('%s' % o['DiffEncoding'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModuleNwIntfState', header, rows)
-
 
     def printOspfIfEntrys(self, addHeader=True, brief=None):
         header = []; rows = []
@@ -8901,20 +8375,20 @@ class FlexSwitchShow( object):
         self.tblPrintObject('BGPPolicyActionState', header, rows)
 
 
-    def printVxlanInstances(self, addHeader=True, brief=None):
+    def printIsisGlobals(self, addHeader=True, brief=None):
         header = []; rows = []
         if addHeader:
-            header.append('Vni')
-            header.append('VlanId')
+            header.append('Vrf')
+            header.append('Enable')
 
-        objs = self.swtch.getAllVxlanInstances()
+        objs = self.swtch.getAllIsisGlobals()
         for obj in objs:
             o = obj['Object']
             values = []
-            values.append('%s' % o['Vni'])
-            values.append('%s' % o['VlanId'])
+            values.append('%s' % o['Vrf'])
+            values.append('%s' % o['Enable'])
             rows.append(values)
-        self.tblPrintObject('VxlanInstance', header, rows)
+        self.tblPrintObject('IsisGlobal', header, rows)
 
 
     def printBGPPolicyDefinitionStates(self, addHeader=True, brief=None):
@@ -9782,84 +9256,6 @@ class FlexSwitchShow( object):
         self.tblPrintObject('VoltageSensorState', header, rows)
 
 
-    def printDWDMModuleNwIntfPMStates(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('Resource')
-            header.append('NwIntfId')
-            header.append('Type')
-            header.append('Class')
-            header.append('ModuleId')
-            header.append('Data')
-
-        objs = self.swtch.getAllDWDMModuleNwIntfPMStates()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['Resource'])
-            values.append('%s' % o['NwIntfId'])
-            values.append('%s' % o['Type'])
-            values.append('%s' % o['Class'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['Data'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModuleNwIntfPMState', header, rows)
-
-
-    def printDWDMModuleNwIntfPMState(self, Resource,NwIntfId,Type,Class,ModuleId, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('Resource')
-            header.append('NwIntfId')
-            header.append('Type')
-            header.append('Class')
-            header.append('ModuleId')
-            header.append('Data')
-
-        rawobj = self.swtch.getDWDMModuleNwIntfPMState(
-                                                       Resource,
-                                                       NwIntfId,
-                                                       Type,
-                                                       Class,
-                                                       ModuleId)
-        if rawobj.status_code in self.httpSuccessCodes:
-            obj = rawobj.json()
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['Resource'])
-            values.append('%s' % o['NwIntfId'])
-            values.append('%s' % o['Type'])
-            values.append('%s' % o['Class'])
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['Data'])
-            rows.append(values)
-            self.tblPrintObject('DWDMModuleNwIntfPMState', header, rows)
-
-        else:
-            print rawobj.content
-
-    def printDWDMModules(self, addHeader=True, brief=None):
-        header = []; rows = []
-        if addHeader:
-            header.append('ModuleId')
-            header.append('EnableExtPMTickSrc')
-            header.append('PMInterval')
-            header.append('AdminState')
-            header.append('IndependentLaneMode')
-
-        objs = self.swtch.getAllDWDMModules()
-        for obj in objs:
-            o = obj['Object']
-            values = []
-            values.append('%s' % o['ModuleId'])
-            values.append('%s' % o['EnableExtPMTickSrc'])
-            values.append('%s' % o['PMInterval'])
-            values.append('%s' % o['AdminState'])
-            values.append('%s' % o['IndependentLaneMode'])
-            rows.append(values)
-        self.tblPrintObject('DWDMModule', header, rows)
-
-
     def printAcls(self, addHeader=True, brief=None):
         header = []; rows = []
         if addHeader:
@@ -10257,20 +9653,20 @@ class FlexSwitchShow( object):
         else:
             print rawobj.content
 
-    def printIsisGlobals(self, addHeader=True, brief=None):
+    def printVxlanInstances(self, addHeader=True, brief=None):
         header = []; rows = []
         if addHeader:
-            header.append('Vrf')
-            header.append('Enable')
+            header.append('Vni')
+            header.append('VlanId')
 
-        objs = self.swtch.getAllIsisGlobals()
+        objs = self.swtch.getAllVxlanInstances()
         for obj in objs:
             o = obj['Object']
             values = []
-            values.append('%s' % o['Vrf'])
-            values.append('%s' % o['Enable'])
+            values.append('%s' % o['Vni'])
+            values.append('%s' % o['VlanId'])
             rows.append(values)
-        self.tblPrintObject('IsisGlobal', header, rows)
+        self.tblPrintObject('VxlanInstance', header, rows)
 
 
     def printBGPv6RouteStates(self, addHeader=True, brief=None):
@@ -10855,6 +10251,3 @@ class FlexSwitchShow( object):
 
         else:
             print rawobj.content
-            
-            
-            
