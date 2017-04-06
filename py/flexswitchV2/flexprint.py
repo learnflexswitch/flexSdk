@@ -229,19 +229,17 @@ class FlexPrint( FlexSwitchShow):
                     print "   via", rt_next['NextHopList'][rt_count-1]['NextHopIp']+", "+rt_next['NextHopList'][rt_count-1]['NextHopIntRef']+", "+"["+str(rd['Distance'])+"/"+str(rt_next['NextHopList'][rt_count-1]['Weight'])+"]"+",",rt['RouteCreatedTime']+",",rt['Protocol']
                 rt_count-=1
 
-    def printDpiState(self,file):
+    def printDpiState(self,Name):
 
-        self.printDpiStatesInfo(file)
+        self.printDpiStatesInfo(Name)
         
     def printDpiStates(self):
 
-        self.printDpiStatesInfo()
+        self.printALLDpiStatesInfo()
+        
+    def printALLDpiStatesInfo(self):
+        rules = self.swtch.getDpiRulesById().json()
 
-    def printDpiStatesInfo(self, Name=None):
-        if Name is not None:
-            rules = self.swtch.getDpiRulesById(Name).json()
-        else:
-            rules = self.swtch.getAllDpiRulesStates().json()
             
         if len(rules)>=0:
             print '\n'
@@ -255,12 +253,30 @@ class FlexPrint( FlexSwitchShow):
                 status = "enabled"
                 rulelist = rule['Rules']
                 ruleslen=str(len(rulelist))
-                if Name is None:
-                    rows.append(("%s" %(name), "%s" %(status), "%s" %(ruleslen)))
+                rows.append(("%s" %(name), "%s" %(status), "%s" %(ruleslen)))
                     #print name
-                else:
-                    for rule in  rulelist:
-                        rows.append(("%s" %(name), "%s" %(status), "%s" %(rule)))
+
+
+            width = 20
+            print indent([labels]+rows, hasHeader=True, separateRows=False,
+                        prefix=' ', postfix=' ', headerChar= '-', delim='    ',
+                        wrapfunc=lambda x: wrap_onspace_strict(x,width))
+
+    def printDpiStatesInfo(self, Name):
+        rules = self.swtch.getDpiRulesById(Name).json()
+            
+        if len(rules)>=0:
+            print '\n'
+            labels = ('Name','Status','Rules')
+            rows=[]
+
+            rule = rules['Object']
+            name = rule['name']
+            status = "enabled"
+            rulelist = rule['Rules']
+            ruleslen=str(len(rulelist))
+            for onerule in  rulelist:
+                rows.append(("%s" %(name), "%s" %(status), "%s" %(onerule)))
 
             width = 20
             print indent([labels]+rows, hasHeader=True, separateRows=False,
